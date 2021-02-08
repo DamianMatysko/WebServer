@@ -11,6 +11,7 @@ namespace WebApp.Models
         public string EmployeeName { get; set; }
         public string Department { get; set; }
         public string MailID { get; set; }
+        public string Password { get; set; }
         public DateTime? DOJ { get; set; }
     }
 } 

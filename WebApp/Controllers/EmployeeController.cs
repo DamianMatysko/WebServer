@@ -16,59 +16,60 @@ namespace WebApp.Controllers
         public HttpResponseMessage Get()
         {
             DataTable table = new DataTable();
-            string query = @"select EmployeeID, EmployeeName, Department, MailID, CONVERT(varchar(10), DOJ, 120) as DOJ from dbo.Employee";
+            string query = "SELECT EmployeeID, EmployeeName, Department, MailID, Password, convert(varchar(10), DOJ, 120) as DOJ  FROM dbo.Employees";
             using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["EmployeeAppDB"].ConnectionString))
             using (var cmd = new SqlCommand(query, con))
-            using (var da = new SqlDataAdapter(cmd))
+            using (var data = new SqlDataAdapter(cmd))
             {
                 cmd.CommandType = CommandType.Text;
-                da.Fill(table);
+                data.Fill(table);
             }
+
             return Request.CreateResponse(HttpStatusCode.OK, table);
         }
+
         public string Post(Employee employee)
         {
-
             try
             {
+                DateTime now = DateTime.Now;
                 DataTable table = new DataTable();
-                string query = @"insert into dbo.Employee (EmployeeName, Department, MailID, DOJ) values ('" + employee.EmployeeName + @"','" + employee.Department + @"','" + employee.MailID + @"','" + employee.DOJ + @"')";
+                string query = @"insert into dbo.Employees (EmployeeName, Department, MailID, DOJ, Password) values ('" + employee.EmployeeName + "', '" + employee.Department + "','" + employee.MailID + "','" + now + "', '" + employee.Password + "')";
                 using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["EmployeeAppDB"].ConnectionString))
                 using (var cmd = new SqlCommand(query, con))
-                using (var da = new SqlDataAdapter(cmd))
+                using (var data = new SqlDataAdapter(cmd))
                 {
                     cmd.CommandType = CommandType.Text;
-                    da.Fill(table);
+                    data.Fill(table);
                 }
 
-                return "Added Successfully";
+                return "Added successfully";
             }
             catch (Exception)
             {
-                return "Failed to Add";
+                return "Failed to add";
             }
         }
         public string Put(Employee employee)
         {
             try
             {
-                string doj = employee.DOJ.ToString().Split(' ')[0];
-                string query = @"update dbo.Employee set EmployeeName = '" + employee.EmployeeName + @"',Department = '" + employee.Department +@"',MailID = '" + employee.MailID + @"',DOJ = '" + doj + @"' where EmployeeID = '" + employee.EmployeeID+@"' ";
                 DataTable table = new DataTable();
+                string query = "update dbo.Employees set EmployeeName = '" + employee.EmployeeName + "', Department = '" + employee.Department + "', MailID = '" + employee.MailID + "', DOJ = '" + employee.DOJ + "' where EmployeeID = " + employee.EmployeeID + "";
+
                 using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["EmployeeAppDB"].ConnectionString))
                 using (var cmd = new SqlCommand(query, con))
-                using (var da = new SqlDataAdapter(cmd))
+                using (var data = new SqlDataAdapter(cmd))
                 {
-                    cmd.CommandType = CommandType.Text; 
-                    da.Fill(table);
+                    cmd.CommandType = CommandType.Text;
+                    data.Fill(table);
                 }
 
-                return "Updated Successfully";
+                return "Updated successfully!";
             }
             catch (Exception)
             {
-
-                return "Update FAILED";
+                return "Failed to update!";
             }
         }
         public string Delete(int id)
@@ -76,19 +77,21 @@ namespace WebApp.Controllers
             try
             {
                 DataTable table = new DataTable();
-                string query = @"delete from dbo.Employee where EmployeeID = " + id;
+                string query = "delete from dbo.Employees where EmployeeID = " + id + "";
+
                 using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["EmployeeAppDB"].ConnectionString))
                 using (var cmd = new SqlCommand(query, con))
-                using (var da = new SqlDataAdapter(cmd))
+                using (var data = new SqlDataAdapter(cmd))
                 {
                     cmd.CommandType = CommandType.Text;
-                    da.Fill(table);
+                    data.Fill(table);
                 }
-                return "Deleted Successfully";
+
+                return "Deleted successfully!";
             }
             catch (Exception)
             {
-                return "Failed to delete";
+                return "Failed to delete!";
             }
         }
     }

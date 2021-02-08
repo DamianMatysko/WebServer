@@ -15,7 +15,7 @@ namespace WebApp.Controllers
         public HttpResponseMessage Get()
         {
             DataTable table = new DataTable();
-            string query = @"select TaskID, Employee, Task, CONVERT(varchar(10), DateOfCreation, 120) as DateOfCreation, CONVERT(varchar(10), Deadline, 120) as Deadline, Status from dbo.Tasks";
+            string query = @"select TaskID, Employee, Task, Details, CONVERT(varchar(10), DateOfCreation, 120) as DateOfCreation, CONVERT(varchar(10), Deadline, 120) as Deadline, Status from dbo.Tasks";
             using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["EmployeeAppDB"].ConnectionString))
             using (var cmd = new SqlCommand(query, con))
             using (var da = new SqlDataAdapter(cmd))
@@ -29,8 +29,11 @@ namespace WebApp.Controllers
         {
             try
             {
+                //Console.OpenStandardOutput;
+                Console.WriteLine(tasks.Deadline);
+
                 DataTable table = new DataTable();
-                string query = @"insert into dbo.Tasks (Employee, Task, DateOfCreation, Deadline, Status) values ('" + tasks.Employee + @"','" + tasks.Task + @"','" + tasks.DateOfCreation + @"','" + tasks.Deadline + @"','" + tasks.Status + @"')";
+                string query = @"insert into dbo.Tasks (Employee, Task, Details, DateOfCreation, Deadline, Status) values ('" + tasks.Employee + @"','" + tasks.Task + @"','" + tasks.Details + @"','" + tasks.DateOfCreation + @"','" + tasks.Deadline + @"','" + tasks.Status + @"')";
                 using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["EmployeeAppDB"].ConnectionString))
                 using (var cmd = new SqlCommand(query, con))
                 using (var da = new SqlDataAdapter(cmd))
@@ -52,7 +55,7 @@ namespace WebApp.Controllers
             {
                 string dateofcreation = tasks.DateOfCreation.ToString().Split(' ')[0];
                 string deadline = tasks.Deadline.ToString().Split(' ')[0];
-                string query = @"update dbo.Tasks set Employee = '" + tasks.Employee + @"',Task = '" + tasks.Task + @"',DateOfCreation = '" + dateofcreation + @"',Deadline = '" + deadline + @"',Status = '" + tasks.Status + @"' where TaskID = '" + tasks.TaskID + @"' ";
+                string query = @"update dbo.Tasks set Employee = '" + tasks.Employee + @"',Task = '" + tasks.Task + @"',Details = '" + tasks.Details + @"',DateOfCreation = '" + dateofcreation + @"',Deadline = '" + deadline + @"',Status = '" + tasks.Status + @"' where TaskID = '" + tasks.TaskID + @"' ";
                 DataTable table = new DataTable();
                 using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["EmployeeAppDB"].ConnectionString))
                 using (var cmd = new SqlCommand(query, con))
